@@ -36,7 +36,7 @@
       chdir: "{{ bench_path }}"
 
   - name: install frappe app
-    command: bench get-app frappe https://github.com/frappe/frappe
+    command: bench get-app frappe https://github.com/elba7r/frameworking
     args:
       creates: "{{ bench_path }}/apps/frappe"
       chdir: "{{ bench_path }}"
