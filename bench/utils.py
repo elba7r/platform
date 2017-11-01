@@ -134,7 +134,7 @@ def setup_env(bench_path='.'):
 	exec_cmd('./env/bin/pip -q install -e git+https://github.com/frappe/python-pdfkit.git#egg=pdfkit', cwd=bench_path)
 
 def setup_socketio(bench_path='.'):
-	exec_cmd("npm install socket.io redis express superagent cookie", cwd=bench_path)
+	exec_cmd("npm install socket.io@1.7.4 redis express superagent cookie", cwd=bench_path)
 
 def new_site(site, mariadb_root_password=None, admin_password=None, bench_path='.'):
 	import hashlib
