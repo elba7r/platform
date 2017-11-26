@@ -98,7 +98,7 @@ def _update(pull=False, patch=False, build=False, update_bench=False, auto=False
 		restart_supervisor_processes(bench_path=bench_path)
 
 	print "_"*80
-	print "Bench: Open source installer + admin for Frappe and ERPNext (https://erpnext.com)"
+	print "Bench: Open source installer + admin for Revaluesoft (http://revaluesoft.com)"
 	print
 
 
