@@ -350,4 +350,4 @@ if __name__ == '__main__':
 
 	install_bench(args)
 
-	print '''Frappe/ERPNext has been successfully installed!'''
+	print '''Revalue ERP has been successfully installed!'''
