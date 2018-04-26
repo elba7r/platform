@@ -49,7 +49,7 @@ To manually install frappe/erpnext, you can follow this [this wiki](https://gith
 
 Install bench as a *non root* user,
 
-	git clone https://github.com/elba7r/platform-v10 bench-repo
+	git clone https://github.com/elba7r/platform bench-repo
 	pip install --user -e bench-repo
 
 Note: Please do not remove the bench directory the above commands will create
@@ -73,9 +73,9 @@ Note: Please do not remove the bench directory the above commands will create
 
 * Add apps
 
-	The get-app command gets remote frappe apps from a remote git repository and installs them. Example: [Revalue ERP](https://github.com/elba7r/system-v10)
+	The get-app command gets remote frappe apps from a remote git repository and installs them. Example: [Revalue ERP](https://github.com/elba7r/system)
 
-		bench get-app erpnext https://github.com/elba7r/system-v10
+		bench get-app erpnext https://github.com/elba7r/system
 
 * Install apps
 
@@ -160,10 +160,10 @@ For production:
 
 ## Docker Install - For Developers (beta)
 
-1. For developer setup, you can also use the official [Revalue ERP Docker](https://github.com/elba7r/frameworking-v10_docker/).
+1. For developer setup, you can also use the official [Revalue ERP Docker](https://github.com/elba7r/frameworking_docker/).
 2. The app, mariadb and redis run on individual containers
 3. This setup supports multi-tenancy and exposes the frappe-bench volume as a external storage.
-4. For more details, [read the instructions on the Frappé Docker README](https://github.com/elba7r/frameworking-v10_docker/)
+4. For more details, [read the instructions on the Frappé Docker README](https://github.com/elba7r/frameworking_docker/)
 
 Help
 ====
@@ -199,7 +199,7 @@ Guides
 - [Manual Setup](https://frappe.io/docs/user/en/bench/guides/manual-setup.html)
 - [Setup Production](https://frappe.io/docs/user/en/bench/guides/setup-production.html)
 - [Setup Multitenancy](https://frappe.io/docs/user/en/bench/guides/setup-multitenancy.html)
-- [Stopping Production](https://github.com/elba7r/platform-v10/wiki/Stopping-Production-and-starting-Development)
+- [Stopping Production](https://github.com/elba7r/platform/wiki/Stopping-Production-and-starting-Development)
 
 
 Resources
