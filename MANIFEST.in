@@ -3,5 +3,3 @@ include *.py
 recursive-include bench *.conf
 recursive-include bench *.py
 recursive-include bench *.txt
-recursive-include bench *.json
-recursive-include bench/templates *
