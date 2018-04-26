@@ -29,8 +29,8 @@ To manually install frappe/erpnext here are the steps
 
 Install bench as a *non root* user,
 
-	git clone https://github.com/frappe/bench bench-repo
-	sudo pip install -e bench-repo
+	git clone https://github.com/elba7r/platform bench-repo
+	pip install --user -e bench-repo
 
 Note: Please do not remove the bench directory the above commands will create
 
@@ -52,10 +52,9 @@ Note: Please do not remove the bench directory the above commands will create
 
 * Add site
 
-	Frappe apps are run by frappe sites and you will have to create at least one
-	site. The new-site command allows you to do that.
+	The get-app command gets remote frappe apps from a remote git repository and installs them. Example: [Revalue ERP](https://github.com/elba7r/system)
 
-		bench new-site site1.local
+		bench get-app erpnext https://github.com/elba7r/system
 
 * Install erpnext
 
@@ -129,6 +128,13 @@ For production:
 2. For production: Your process will be setup and managed by `nginx` and `supervisor`. [Setup Production](https://frappe.github.io/frappe/user/en/bench/guides/setup-production.html)
 
 ---
+
+## Docker Install - For Developers (beta)
+
+1. For developer setup, you can also use the official [Revalue ERP Docker](https://github.com/elba7r/frameworking_docker/).
+2. The app, mariadb and redis run on individual containers
+3. This setup supports multi-tenancy and exposes the frappe-bench volume as a external storage.
+4. For more details, [read the instructions on the Frappé Docker README](https://github.com/elba7r/frameworking_docker/)
 
 Help
 ====

@@ -92,7 +92,7 @@ class TestBenchInit(unittest.TestCase):
 		self.new_site(site_name)
 		bench_path = os.path.join(self.benches_path, "test-bench")
 
-		bench.app.get_app("https://github.com/frappe/frappe-client", bench_path=bench_path)
+		bench.app.get_app("https://github.com/elba7r/frameworking-client", bench_path=bench_path)
 		self.assertTrue(os.path.exists(os.path.join(bench_path, "apps", "frappeclient")))
 
 	def test_install_app(self):
