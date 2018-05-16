@@ -55,7 +55,7 @@ def confirm_testing():
 	print('')
 	print('================ CAUTION ==================')
 	print('Never miss this, even if it is a really small release!!')
-	print('Manual Testing Checklisk: https://github.com/elba7r/platform-v10/wiki/Testing-Checklist')
+	print('Manual Testing Checklisk: https://github.com/elba7r/platform/wiki/Testing-Checklist')
 	print('')
 	print('')
 	click.confirm('Is manual testing done?', abort = True)
