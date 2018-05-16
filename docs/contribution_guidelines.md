@@ -4,7 +4,7 @@
 
 Thank you for your interesting in contributing to an open source project! Our world works on people taking initiative to contribute to the "commons" and contributing to open source means you are contributing to make things better for not only yourself, but everyone else too! So thank you for taking this initiative.
 
-Great projects also work because of great quality. Open source or not, the user really cares that things should work as they are advertised, and consistently. New features should follow the same pattern and so that users don't have to learn things again and again. 
+Great projects also work because of great quality. Open source or not, the user really cares that things should work as they are advertised, and consistently. New features should follow the same pattern and so that users don't have to learn things again and again.
 
 Developers who maintain open source also expect that you follow certain guidelines. These guidelines ensure that developers are able quickly give feedback on your contribution and how to make it better. Most probably you might have to go back and change a few things, but it will be in th interest of making this process better for everyone. So do be prepared for some back and forth.
 
@@ -35,7 +35,7 @@ Please read the following design guidelines carefully when contributing:
 1. **Incorrect Naming:** The naming of variables, models, fields etc must be consistent as per the existing design and semantics used in the system.
 1. **Translated Strings:** All user facing strings / text must be wrapped in the `__("")` function in javascript and `_("")` function in Python, so that it is shown as translated to the user.
 1. **Deprecated API:** The API used in the pull request must be the latest recommended methods and usage of globals like `cur_frm` must be avoided.
-1. **Whitespace and indentation:** The Revalue ERP and Frappe Project uses tabs (I know and we are sorry, but its too much effort to change it now and we don't want to lose the history). The indentation must be consistent whether you are writing Javascript or Python. Multi-line strings or expressions must also be consistently indented, not hanging like a bee hive at the end of the line. We just think the code looks a lot more stable that way.
+1. **Whitespace and indentation:** The Revalue ERP Project uses tabs (I know and we are sorry, but its too much effort to change it now and we don't want to lose the history). The indentation must be consistent whether you are writing Javascript or Python. Multi-line strings or expressions must also be consistently indented, not hanging like a bee hive at the end of the line. We just think the code looks a lot more stable that way.
 
 #### What if my Pull Request is closed?
 

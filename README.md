@@ -65,10 +65,9 @@ Note: Please do not remove the bench directory the above commands will create
 
 * Add a site
 
-	Frappe apps are run by frappe sites and you will have to create at least one
-	site. The new-site command allows you to do that.
+	The get-app command gets remote frappe apps from a remote git repository and installs them. Example: [Revalue ERP](https://github.com/elba7r/system)
 
-		bench new-site site1.local
+		bench get-app erpnext https://github.com/elba7r/system
 
 * Add apps
 
@@ -149,7 +148,11 @@ For production:
 1. For developer setup, you can also use the official [Revalue ERP Docker](https://github.com/elba7r/frameworking_docker/).
 2. The app, mariadb and redis run on individual containers
 3. This setup supports multi-tenancy and exposes the frappe-bench volume as a external storage.
+<<<<<<< HEAD
 4. For more details, [read the instructions on the Revalue ERP Docker README](https://github.com/elba7r/frameworking_docker/)
+=======
+4. For more details, [read the instructions on the Frappé Docker README](https://github.com/elba7r/frameworking_docker/)
+>>>>>>> 94112f6e98b839c68f570dfd53a851e21e93f27b
 
 Help
 ====
