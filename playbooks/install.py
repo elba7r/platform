@@ -30,38 +30,32 @@ def install_bench(args):
 		})
 
 	if not success:
-		print 'Could not install pre-requisites. Please check for errors or install them manually.'
+		print('Could not install pre-requisites. Please check for errors or install them manually.')
 		return
 
 	# secure pip installation
 	if find_executable('pip'):
 		run_os_command({
-			'yum': 'sudo pip install --upgrade setuptools pip',
-			'apt-get': 'sudo pip install --upgrade setuptools pip==9.0.3',
-			'brew': "sudo pip install --upgrade setuptools pip --user"
+			'pip': 'sudo pip install --upgrade setuptools pip==9.0.3'
 		})
 
 	else:
 		if not os.path.exists("get-pip.py"):
 			run_os_command({
-				'apt-get': 'wget https://bootstrap.pypa.io/get-pip.py',
-				'yum': 'wget https://bootstrap.pypa.io/get-pip.py'
+				'wget': 'wget https://bootstrap.pypa.io/get-pip.py'
 			})
 
 		success = run_os_command({
-			'apt-get': 'sudo python get-pip.py',
-			'yum': 'sudo python get-pip.py',
+			'python': 'sudo python get-pip.py --force-reinstall'
 		})
 
 		if success:
 			run_os_command({
-				'pip': 'sudo pip install --upgrade pip setuptools',
+				'pip': 'sudo pip install --upgrade pip==9.0.3 setuptools',
 			})
 
-	# Restricting ansible version due to following bug in ansible 2.1
-	# https://github.com/ansible/ansible-modules-core/issues/3752
 	success = run_os_command({
-		'pip': "sudo pip install 'ansible==2.0.2.0'"
+		'pip': "sudo pip install ansible"
 	})
 
 	if not success:
@@ -75,7 +69,7 @@ def install_bench(args):
 		if args.production:
 			args.user = 'frappe'
 
-		elif os.environ.has_key('SUDO_USER'):
+		elif 'SUDO_USER' in os.environ:
 			args.user = os.environ['SUDO_USER']
 
 		else:
@@ -83,6 +77,14 @@ def install_bench(args):
 
 	if args.user == 'root':
 		raise Exception('Please run this script as a non-root user with sudo privileges, but without using sudo or pass --user=USER')
+
+	# Python executable
+	if not args.production:
+		dist_name, dist_version = get_distribution_info()
+		if dist_name=='centos':
+			args.python = 'python3.6'
+		else:
+			args.python = 'python3'
 
 	# create user if not exists
 	extra_vars = vars(args)
@@ -95,26 +97,39 @@ def install_bench(args):
 		repo_path = os.path.join(os.path.expanduser('~'), 'bench')
 
 	extra_vars.update(repo_path=repo_path)
-	run_playbook('develop/create_user.yml', extra_vars=extra_vars)
+	run_playbook('create_user.yml', extra_vars=extra_vars)
 
-	extra_vars.update(get_passwords(args.run_travis or args.without_bench_setup))
+	extra_vars.update(get_passwords(args))
 	if args.production:
 		extra_vars.update(max_worker_connections=multiprocessing.cpu_count() * 1024)
 
-	branch = 'master' if args.production else 'develop'
-	extra_vars.update(branch=branch)
+	if args.frappe_branch:
+		frappe_branch = args.frappe_branch
+	else:
+		frappe_branch = 'master' if args.production else 'develop'
+	extra_vars.update(frappe_branch=frappe_branch)
 
-	if args.develop:
-		run_playbook('develop/install.yml', sudo=True, extra_vars=extra_vars)
+	if args.erpnext_branch:
+		erpnext_branch = args.erpnext_branch
+	else:
+		erpnext_branch = 'master' if args.production else 'develop'
+	extra_vars.update(erpnext_branch=erpnext_branch)
+	
+	bench_name = 'frappe-bench' if not args.bench_name else args.bench_name
+	extra_vars.update(bench_name=bench_name)
 
-	elif args.production:
-		run_playbook('production/install.yml', sudo=True, extra_vars=extra_vars)
+	# Will install Revalue ERP production setup by default
+	run_playbook('site.yml', sudo=True, extra_vars=extra_vars)
+
+	# # Will do changes for production if --production flag is passed
+	# if args.production:
+	# 	run_playbook('production.yml', sudo=True, extra_vars=extra_vars)
 
 	if os.path.exists(tmp_bench_repo):
 		shutil.rmtree(tmp_bench_repo)
 
 def check_distribution_compatibility():
-	supported_dists = {'ubuntu': [14, 15, 16], 'debian': [7, 8],
+	supported_dists = {'ubuntu': [14, 15, 16], 'debian': [8, 9],
 		'centos': [7], 'macos': [10.9, 10.10, 10.11, 10.12]}
 
 	dist_name, dist_version = get_distribution_info()
@@ -122,9 +137,9 @@ def check_distribution_compatibility():
 		if float(dist_version) in supported_dists[dist_name]:
 			return
 
-	print "Sorry, the installer doesn't support {0} {1}. Aborting installation!".format(dist_name, dist_version)
+	print("Sorry, the installer doesn't support {0} {1}. Aborting installation!".format(dist_name, dist_version))
 	if dist_name in supported_dists:
-		print "Install on {0} {1} instead".format(dist_name, supported_dists[dist_name][-1])
+		print("Install on {0} {1} instead".format(dist_name, supported_dists[dist_name][-1]))
 	sys.exit(1)
 
 def get_distribution_info():
@@ -142,11 +157,11 @@ def install_python27():
 	if version == (2, 7):
 		return
 
-	print 'Installing Python 2.7'
+	print('Installing Python 2.7')
 
 	# install python 2.7
 	success = run_os_command({
-		'apt-get': 'sudo apt-get install -y python2.7',
+		'apt-get': 'sudo apt-get install -y python-dev',
 		'yum': 'sudo yum install -y python27',
 		'brew': 'brew install python'
 	})
@@ -210,9 +225,9 @@ def clone_bench_repo(args):
 def run_os_command(command_map):
 	'''command_map is a dictionary of {'executable': command}. For ex. {'apt-get': 'sudo apt-get install -y python2.7'} '''
 	success = True
-	for executable, commands in command_map.items():
+	for executable, commands in list(command_map.items()):
 		if find_executable(executable):
-			if isinstance(commands, basestring):
+			if isinstance(commands, str):
 				commands = [commands]
 
 			for command in commands:
@@ -229,9 +244,31 @@ def could_not_install(package):
 def is_sudo_user():
 	return os.geteuid() == 0
 
-def get_passwords(ignore_prompt=False):
+
+def get_passwords(args):
+	"""
+	Returns a dict of passwords for further use
+	and creates passwords.txt in the bench user's home directory
+	"""
+
+	ignore_prompt = args.run_travis or args.without_bench_setup
+	mysql_root_password, admin_password = '', ''
+	passwords_file_path = os.path.join(os.path.expanduser('~' + args.user), 'passwords.txt')
+
 	if not ignore_prompt:
-		mysql_root_password, admin_password = '', ''
+		# set passwords from existing passwords.txt
+		if os.path.isfile(passwords_file_path):
+			with open(passwords_file_path, 'r') as f:
+				passwords = json.load(f)
+				mysql_root_password, admin_password = passwords['mysql_root_password'], passwords['admin_password']
+
+		# set passwords from cli args
+		if args.mysql_root_password:
+			mysql_root_password = args.mysql_root_password
+		if args.admin_password:
+			admin_password = args.admin_password
+
+		# prompt for passwords
 		pass_set = True
 		while pass_set:
 			# mysql root password
@@ -239,7 +276,7 @@ def get_passwords(ignore_prompt=False):
 				mysql_root_password = getpass.unix_getpass(prompt='Please enter mysql root password: ')
 				conf_mysql_passwd = getpass.unix_getpass(prompt='Re-enter mysql root password: ')
 
-				if mysql_root_password != conf_mysql_passwd:
+				if mysql_root_password != conf_mysql_passwd or mysql_root_password == '':
 					mysql_root_password = ''
 					continue
 
@@ -248,7 +285,7 @@ def get_passwords(ignore_prompt=False):
 				admin_password = getpass.unix_getpass(prompt='Please enter the default Administrator user password: ')
 				conf_admin_passswd = getpass.unix_getpass(prompt='Re-enter Administrator password: ')
 
-				if admin_password != conf_admin_passswd:
+				if admin_password != conf_admin_passswd or admin_password == '':
 					admin_password = ''
 					continue
 
@@ -262,19 +299,19 @@ def get_passwords(ignore_prompt=False):
 	}
 
 	if not ignore_prompt:
-		passwords_file_path = os.path.join(os.path.expanduser('~'), 'passwords.txt')
 		with open(passwords_file_path, 'w') as f:
 			json.dump(passwords, f, indent=1)
 
-		print 'Passwords saved at ~/passwords.txt'
+		print('Passwords saved at ~/passwords.txt')
 
 	return passwords
+
 
 def get_extra_vars_json(extra_args):
 	# We need to pass production as extra_vars to the playbook to execute conditionals in the
 	# playbook. Extra variables can passed as json or key=value pair. Here, we will use JSON.
 	json_path = os.path.join('/tmp', 'extra_vars.json')
-	extra_vars = dict(extra_args.items())
+	extra_vars = dict(list(extra_args.items()))
 	with open(json_path, mode='w') as j:
 		json.dump(extra_vars, j, indent=1, sort_keys=True)
 
@@ -317,7 +354,10 @@ def parse_commandline_args():
 		default=False, help='Setup Production environment for bench')
 
 	parser.add_argument('--site', dest='site', action='store', default='site1.local',
-		help='Specifiy name for your first ERPNext site')
+		help='Specifiy name for your first Revalue ERP site')
+	
+	parser.add_argument('--without-site', dest='without_site', action='store_true',
+		default=False)
 
 	parser.add_argument('--verbose', dest='verbosity', action='store_true', default=False,
 		help='Run the script in verbose mode')
@@ -328,12 +368,38 @@ def parse_commandline_args():
 
 	parser.add_argument('--repo-url', dest='repo_url', help='Clone bench from the given url')
 
+	parser.add_argument('--frappe-repo-url', dest='frappe_repo_url', action='store', default='https://github.com/elba7r/frameworking',
+		help='Clone frappe from the given url')
+
+	parser.add_argument('--frappe-branch', dest='frappe_branch', action='store',
+		help='Clone a particular branch of frappe')
+	
+	parser.add_argument('--erpnext-repo-url', dest='erpnext_repo_url', action='store', default='https://github.com/elba7r/system', 
+		help='Clone Revalue ERP from the given url')
+	
+	parser.add_argument('--erpnext-branch', dest='erpnext_branch', action='store',
+		help='Clone a particular branch of Revalue ERP')
+
 	# To enable testing of script using Travis, this should skip the prompt
 	parser.add_argument('--run-travis', dest='run_travis', action='store_true', default=False,
 		help=argparse.SUPPRESS)
 
 	parser.add_argument('--without-bench-setup', dest='without_bench_setup', action='store_true', default=False,
 		help=argparse.SUPPRESS)
+	
+	# whether to overwrite an existing bench
+	parser.add_argument('--overwrite', dest='overwrite', action='store_true', default=False,
+		help='Whether to overwrite an existing bench')
+
+	# set passwords
+	parser.add_argument('--mysql-root-password', dest='mysql_root_password', help='Set mysql root password')
+	parser.add_argument('--admin-password', dest='admin_password', help='Set admin password')
+	parser.add_argument('--bench-name', dest='bench_name', help='Create bench with specified name. Default name is frappe-bench')
+
+	# Python interpreter to be used
+	parser.add_argument('--python', dest='python', default='python',
+		help=argparse.SUPPRESS
+	)
 
 	args = parser.parse_args()
 
@@ -350,4 +416,4 @@ if __name__ == '__main__':
 
 	install_bench(args)
 
-	print '''Revalue ERP has been successfully installed!'''
+	print('''Revalue ERP has been successfully installed!''')
