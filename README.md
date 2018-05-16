@@ -26,12 +26,12 @@ You will need a computer/server. Options include:
 
 To install the Revalue ERP server software, you will need an operating system on your normal computer which is not Windows. Note that the command line interface does work on Windows, and you can use Revalue ERP from any operating system with a web browser. However, the server software does not run on Windows. It does run on other operating systems, so choose one of these instead:
 
-- Linux: Debian, Ubuntu, CentOS are the preferred distros and are well tested. [Arch Linux](https://github.com/elba7r/platform/wiki/Install-ERPNext-on-ArchLinux) can also be used
+- Linux: Debian, Ubuntu, CentOS are the preferred distros and are well tested. [Arch Linux](https://github.com/elba7r/platform-v10/wiki/Install-ERPNext-on-ArchLinux) can also be used
 - Mac OS X
 
 ### Manual Install
 
-To manually install Revalue ERP, you can follow this [this wiki](https://github.com/elba7r/frameworking/wiki/The-Hitchhiker's-Guide-to-Installing-Frapp%C3%A9-on-Linux-OS) for Linux and [this wiki](https://github.com/elba7r/frameworking/wiki/The-Hitchhiker's-Guide-to-Installing-Frapp%C3%A9-on-Mac-OS-X) for MacOS. It gives an excellent explanation about the stack. You can also follow the steps mentioned below:
+To manually install Revalue ERP, you can follow this [this wiki](https://github.com/elba7r/frameworking-v10/wiki/The-Hitchhiker's-Guide-to-Installing-Frapp%C3%A9-on-Linux-OS) for Linux and [this wiki](https://github.com/elba7r/frameworking-v10/wiki/The-Hitchhiker's-Guide-to-Installing-Frapp%C3%A9-on-Mac-OS-X) for MacOS. It gives an excellent explanation about the stack. You can also follow the steps mentioned below:
 
 #### 1. Install Pre-requisites
 
@@ -48,7 +48,7 @@ To manually install Revalue ERP, you can follow this [this wiki](https://github.
 
 Install bench as a *non root* user,
 
-	git clone https://github.com/elba7r/platform bench-repo
+	git clone https://github.com/elba7r/platform-v10 bench-repo
 	pip install --user -e bench-repo
 
 Note: Please do not remove the bench directory the above commands will create
@@ -65,15 +65,16 @@ Note: Please do not remove the bench directory the above commands will create
 
 * Add a site
 
-	The get-app command gets remote frappe apps from a remote git repository and installs them. Example: [Revalue ERP](https://github.com/elba7r/system)
+	Frappe apps are run by frappe sites and you will have to create at least one
+	site. The new-site command allows you to do that.
 
-		bench get-app erpnext https://github.com/elba7r/system
+		bench new-site site1.local
 
 * Add apps
 
-	The get-app command gets remote frappe apps from a remote git repository and installs them. Example: [erpnext](https://github.com/elba7r/system)
+	The get-app command gets remote frappe apps from a remote git repository and installs them. Example: [erpnext](https://github.com/elba7r/system-v10)
 
-		bench get-app erpnext https://github.com/elba7r/system
+		bench get-app erpnext https://github.com/elba7r/system-v10
 
 * Install apps
 
@@ -145,14 +146,10 @@ For production:
 
 ## Docker Install - For Developers (beta)
 
-1. For developer setup, you can also use the official [Revalue ERP Docker](https://github.com/elba7r/frameworking_docker/).
+1. For developer setup, you can also use the official [Revalue ERP Docker](https://github.com/elba7r/frameworking-v10_docker/).
 2. The app, mariadb and redis run on individual containers
 3. This setup supports multi-tenancy and exposes the frappe-bench volume as a external storage.
-<<<<<<< HEAD
-4. For more details, [read the instructions on the Revalue ERP Docker README](https://github.com/elba7r/frameworking_docker/)
-=======
-4. For more details, [read the instructions on the Frappé Docker README](https://github.com/elba7r/frameworking_docker/)
->>>>>>> 94112f6e98b839c68f570dfd53a851e21e93f27b
+4. For more details, [read the instructions on the Revalue ERP Docker README](https://github.com/elba7r/frameworking-v10_docker/)
 
 Help
 ====
@@ -188,7 +185,7 @@ Guides
 - [Manual Setup](https://frappe.io/docs/user/en/bench/guides/manual-setup.html)
 - [Setup Production](https://frappe.io/docs/user/en/bench/guides/setup-production.html)
 - [Setup Multitenancy](https://frappe.io/docs/user/en/bench/guides/setup-multitenancy.html)
-- [Stopping Production](https://github.com/elba7r/platform/wiki/Stopping-Production-and-starting-Development)
+- [Stopping Production](https://github.com/elba7r/platform-v10/wiki/Stopping-Production-and-starting-Development)
 
 
 Resources
